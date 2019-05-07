@@ -33,16 +33,16 @@
     "@stylable/webpack-plugin": "^1.1.4",
     "@types/ejs": "^2.6.3",
     "@types/mkdirp": "^0.5.2",
+    "@types/react": "^16.8.16",
     "@types/rimraf": "^2.0.2",
+    "@types/webpack": "^4.4.31",
     "args": "~5.0.1",
     "ejs": "^2.6.1",
     "find-node-modules": "^2.0.0",
     "json-beautify": "^1.1.0",
     "mkdirp": "^0.5.1",
+    "react": "^16.8.6",
     "rimraf": "^2.6.3",
-    "ts-node": "^8.0.3",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.4.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
     "webpack-node-externals": "^1.7.2"
@@ -55,6 +55,9 @@
     "ts-jest": "^24.0.0",
     "tslint": "^5.14.0",
     "typedoc": "^0.14.2",
-    "wix-ui-tpa": "1.0.131"
+    "wix-ui-tpa": "1.0.131",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.4.1"
   }
 }

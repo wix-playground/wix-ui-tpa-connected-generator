@@ -6,18 +6,18 @@ import {IComponentStructure} from '../interfaces/shared'
 import {Builder, IProjectVariableValues} from './builder'
 
 const MOCK_COMPONENT_STRUCTURE: IComponentStructure = {
-  Comp1: ['Comp1Var1', 'Comp1Var2'],
-  Comp2: ['Comp2Var1', 'Comp2Var2'],
+  Button: ['MainBorderColor', 'MainBorderWidth'],
+  Text: ['MainTextColor', 'MainTextFont'],
 }
 
 const INJECTED_VARIABLES: IProjectVariableValues = {
-  Comp1: {
-    Comp1Var1: 'Comp1Var1Val',
-    Comp1Var2: 'Comp1Var2Val',
+  Button: {
+    MainBorderColor: 'borderColor',
+    MainBorderWidth: 'borderWidth',
   },
-  Comp2: {
-    Comp2Var1: 'Comp2Var1Val',
-    Comp2Var2: 'Comp2Var2Val',
+  Text: {
+    MainTextColor: 'color',
+    MainTextFont: 'font',
   },
 }
 
@@ -27,6 +27,7 @@ let builder: Builder
 
 describe('Builder', () => {
   beforeAll(() => {
+    jest.setTimeout(15000)
     builder = new Builder(MOCK_COMPONENT_STRUCTURE, path.resolve(__dirname, '../../cache/builder'))
   })
 
@@ -46,15 +47,17 @@ describe('Builder', () => {
     it('injects component name into component source code', () => {
       const componentNames = Object.keys(MOCK_COMPONENT_STRUCTURE)
       const componentName = componentNames[componentNames.length - 1]
-      const componentPath = path.resolve(OUTPUT_DIR, componentName, `${componentName}.ts`)
+      const componentPath = path.resolve(OUTPUT_DIR, componentName, `${componentName}.js`)
       const source = fs.readFileSync(componentPath, {encoding: 'utf8'})
       expect(source.indexOf(componentName)).not.toBe(-1)
     })
   })
 
   describe('build', () => {
-    beforeAll(() => {
-      builder.build(OUTPUT_DIR, INJECTED_VARIABLES)
+    beforeAll(done => {
+      builder.build(OUTPUT_DIR, INJECTED_VARIABLES).then(() => {
+        done()
+      })
     })
 
     afterAll(() => {

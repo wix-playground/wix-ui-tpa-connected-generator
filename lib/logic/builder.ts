@@ -3,8 +3,14 @@ import * as fs from 'fs'
 import * as mkdirp from 'mkdirp'
 import * as path from 'path'
 import rimraf = require('rimraf')
+import * as webpack from 'webpack'
 import {IComponentStructure} from '../interfaces/shared'
 import {FileSystem} from './file-system'
+
+/**
+ * Name of module where modules reside
+ */
+export const COMPONENT_MODULE_NAME = 'wix-ui-tpa'
 
 /**
  * Placeholder used in template file names
@@ -47,7 +53,7 @@ export const GENERATED_WEBPACK_CONFIG_PATH = 'webpack/webpack.config.js'
 export const BUILT_CODE_TMP_DIR = 'built'
 
 /**
- * Builds/generates components with or without injected variable values
+ * Builds/generates components wi§th or without injected variable values
  * Note that file and directory names of templates are renamed by replacing
  * $component with actual component name.
  */
@@ -74,12 +80,12 @@ export class Builder {
    * @param outputPath path where consumed components need to be built
    * @param injectedVariableValues variable values to be injected
    */
-  public build(outputPath: string, injectedVariableValues: IProjectVariableValues = {}) {
+  public async build(outputPath: string, injectedVariableValues: IProjectVariableValues = {}) {
     const generatedCodePath = path.resolve(this.tmpPath, GENERATED_CODE_TMP_DIR)
     rimraf.sync(generatedCodePath)
     this.generate(generatedCodePath, injectedVariableValues)
     this.generateConsumerWebpackConfig(outputPath)
-    // TODO: Not finished
+    await this.executeWebpack()
   }
 
   /**
@@ -94,6 +100,20 @@ export class Builder {
         path.resolve(outputPath, componentName),
         injectedVariableValues[componentName] || {},
       )
+    })
+  }
+
+  private executeWebpack() {
+    const config = require(path.resolve(this.tmpPath, GENERATED_WEBPACK_CONFIG_PATH))
+
+    return new Promise((resolve, reject) => {
+      webpack(config, (err, stats) => {
+        if (err || stats.hasErrors()) {
+          reject()
+        }
+
+        resolve()
+      })
     })
   }
 
@@ -125,7 +145,7 @@ export class Builder {
       const targetDirname = path.resolve(componentOutputPath, path.dirname(relativeTemplatePath))
       mkdirp.sync(targetDirname)
       const fileName = path.basename(relativeTemplatePath, '.ejs').replace(COMPONENT_NAME_PLACEHOLDER, componentName)
-      const content = ejs.render(template, {componentName, variables, componentModuleName: COMPONENT_NAME_PLACEHOLDER})
+      const content = ejs.render(template, {componentName, variables, componentModuleName: COMPONENT_MODULE_NAME})
       fs.writeFileSync(path.resolve(targetDirname, fileName), content, {encoding: 'utf8'})
     })
   }
