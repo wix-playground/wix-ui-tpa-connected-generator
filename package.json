@@ -1,0 +1,53 @@
+{
+  "name": "wix-ui-tpa-connector-generator",
+  "version": "1.0.0",
+  "description": "Generates wrapper components for wix-ui-tpa-connected",
+  "main": "dist/index.js",
+  "bin": {
+    "generate-wix-ui-tpa-connected": "cli.js"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run lint && npm run test && npm run build && npm run docs",
+    "test": "./node_modules/.bin/jest --forceExit --detectOpenHandles",
+    "testSync": "./node_modules/.bin/jest --runInBand --forceExit --detectOpenHandles",
+    "lint": "./node_modules/.bin/tslint -c ./tslint.json -p ./tsconfig.json -t stylish ./lib/**/*.ts",
+    "build": "./node_modules/.bin/webpack",
+    "buildDev": "./node_modules/.bin/webpack --config webpack.config.dev.js",
+    "docs": "./node_modules/.bin/typedoc --module commonjs --target ES6 --exclude \"**/*.test.*\" --ignoreCompilerErrors --out ./dist/docs --readme ./README.md --mode file ./index.ts ./lib",
+    "exec": "node ./cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:wix-playground/wix-ui-tpa-connected-generator.git"
+  },
+  "keywords": [
+    "Wix",
+    "UI",
+    "TPA",
+    "connected",
+    "generator"
+  ],
+  "author": "Vytenis Urbonavicius",
+  "license": "MIT",
+  "dependencies": {
+    "args": "~5.0.1",
+    "find-node-modules": "^2.0.0",
+    "json-beautify": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/args": "^3.0.0",
+    "@types/jest": "^24.0.11",
+    "jest": "^24.5.0",
+    "npm-dts-webpack-plugin": "^1.1.0",
+    "ts-jest": "^24.0.0",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.0.3",
+    "tslint": "^5.14.0",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.4.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-node-externals": "^1.7.2",
+    "wix-ui-tpa": "1.0.131"
+  }
+}
