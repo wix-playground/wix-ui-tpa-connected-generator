@@ -5,6 +5,7 @@ import * as path from 'path'
 import rimraf = require('rimraf')
 import * as webpack from 'webpack'
 import {IComponentStructure} from '../interfaces/shared'
+import {CSS} from './css'
 import {FileSystem} from './file-system'
 
 /**
@@ -79,13 +80,18 @@ export class Builder {
    * Builds consumed components
    * @param outputPath path where consumed components need to be built
    * @param injectedVariableValues variable values to be injected
+   * @param useCssNamespace wrap generated CSS with namespace if provided
    */
-  public async build(outputPath: string, injectedVariableValues: IProjectVariableValues = {}) {
+  public async build(outputPath: string, injectedVariableValues: IProjectVariableValues = {}, useCssNamespace = '') {
     const generatedCodePath = path.resolve(this.tmpPath, GENERATED_CODE_TMP_DIR)
     rimraf.sync(generatedCodePath)
     this.generate(generatedCodePath, injectedVariableValues)
     this.generateConsumerWebpackConfig(outputPath)
     await this.executeWebpack()
+
+    if (useCssNamespace) {
+      this.wrapGeneratedStyles(useCssNamespace, outputPath)
+    }
   }
 
   /**
@@ -100,6 +106,15 @@ export class Builder {
         path.resolve(outputPath, componentName),
         injectedVariableValues[componentName] || {},
       )
+    })
+  }
+
+  private wrapGeneratedStyles(namespace: string, outputPath: string) {
+    Object.keys(this.componentStructure).forEach(componentName => {
+      const cssFile = path.resolve(outputPath, `${componentName}.bundle.css`)
+      const initialStyles = fs.readFileSync(cssFile, {encoding: 'utf8'})
+      const wrappedStyles = CSS.wrap(initialStyles, namespace)
+      fs.writeFileSync(cssFile, wrappedStyles, {encoding: 'utf8'})
     })
   }
 

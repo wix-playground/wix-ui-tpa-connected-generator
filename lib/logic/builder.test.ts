@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import * as mkdirp from 'mkdirp'
 import * as path from 'path'
 import * as rimraf from 'rimraf'
 import {IComponentStructure} from '../interfaces/shared'
@@ -22,6 +21,8 @@ const INJECTED_VARIABLES: IProjectVariableValues = {
 }
 
 const OUTPUT_DIR = path.resolve(__dirname, '../../cache/test')
+
+const TEST_NAMESPACE = 'NAMESPACE'
 
 let builder: Builder
 
@@ -55,9 +56,7 @@ describe('Builder', () => {
 
   describe('build', () => {
     beforeAll(done => {
-      builder.build(OUTPUT_DIR, INJECTED_VARIABLES).then(() => {
-        done()
-      })
+      builder.build(OUTPUT_DIR, INJECTED_VARIABLES, TEST_NAMESPACE).then(done, done)
     })
 
     afterAll(() => {
@@ -65,11 +64,21 @@ describe('Builder', () => {
     })
 
     it('builds separate styles for each component', () => {
-      // TODO: Not finished
+      expect(fs.readdirSync(OUTPUT_DIR).filter(item => item.match(/\.css$/))).toEqual(
+        Object.keys(MOCK_COMPONENT_STRUCTURE).map(componentName => `${componentName}.bundle.css`),
+      )
     })
 
     it('builds JS for each component', () => {
-      // TODO: Not finished
+      expect(fs.readdirSync(OUTPUT_DIR).filter(item => item.match(/\.js$/))).toEqual(
+        Object.keys(MOCK_COMPONENT_STRUCTURE).map(componentName => `${componentName}.js`),
+      )
+    })
+
+    it('wraps css with provided namespace', () => {
+      const cssFile = fs.readdirSync(OUTPUT_DIR).filter(item => item.match(/\.css$/))[0]
+      const cssStyles = fs.readFileSync(path.resolve(OUTPUT_DIR, cssFile), {encoding: 'utf8'})
+      expect(cssStyles.indexOf(`${TEST_NAMESPACE}.`)).not.toBe(-1)
     })
   })
 })
