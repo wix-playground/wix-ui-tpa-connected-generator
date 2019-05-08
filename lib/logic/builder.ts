@@ -85,7 +85,7 @@ export class Builder {
   public async build(outputPath: string, injectedVariableValues: IProjectVariableValues = {}, useCssNamespace = '') {
     const generatedCodePath = path.resolve(this.tmpPath, GENERATED_CODE_TMP_DIR)
     rimraf.sync(generatedCodePath)
-    this.generate(generatedCodePath, injectedVariableValues)
+    this.generate(generatedCodePath, injectedVariableValues, useCssNamespace)
     this.generateConsumerWebpackConfig(outputPath)
     await this.executeWebpack()
 
@@ -98,13 +98,15 @@ export class Builder {
    * Generates source code for consuming components
    * @param outputPath path where component consumption code needs to be placed
    * @param injectedVariableValues variable values to be injected
+   * @param useCssNamespace add namespace to className of component - should not used when calling this method directly
    */
-  public generate(outputPath: string, injectedVariableValues: IProjectVariableValues = {}) {
+  public generate(outputPath: string, injectedVariableValues: IProjectVariableValues = {}, useCssNamespace = '') {
     Object.entries(this.componentStructure).forEach(([componentName]) => {
       this.generateComponent(
         componentName,
         path.resolve(outputPath, componentName),
         injectedVariableValues[componentName] || {},
+        useCssNamespace,
       )
     })
   }
@@ -155,12 +157,24 @@ export class Builder {
     mkdirp.sync(this.tmpPath)
   }
 
-  private generateComponent(componentName: string, componentOutputPath: string, variables: IVariableValues = {}) {
+  private generateComponent(
+    componentName: string,
+    componentOutputPath: string,
+    variables: IVariableValues = {},
+    namespace?: string,
+  ) {
     Object.entries(this.template).forEach(([relativeTemplatePath, template]) => {
       const targetDirname = path.resolve(componentOutputPath, path.dirname(relativeTemplatePath))
       mkdirp.sync(targetDirname)
       const fileName = path.basename(relativeTemplatePath, '.ejs').replace(COMPONENT_NAME_PLACEHOLDER, componentName)
-      const content = ejs.render(template, {componentName, variables, componentModuleName: COMPONENT_MODULE_NAME})
+
+      const content = ejs.render(template, {
+        componentName,
+        variables,
+        componentModuleName: COMPONENT_MODULE_NAME,
+        namespace,
+      })
+
       fs.writeFileSync(path.resolve(targetDirname, fileName), content, {encoding: 'utf8'})
     })
   }

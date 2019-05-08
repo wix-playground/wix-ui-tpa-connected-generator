@@ -28,7 +28,7 @@ let builder: Builder
 
 describe('Builder', () => {
   beforeAll(() => {
-    jest.setTimeout(15000)
+    jest.setTimeout(60000)
     builder = new Builder(MOCK_COMPONENT_STRUCTURE, path.resolve(__dirname, '../../cache/builder'))
   })
 
@@ -79,6 +79,12 @@ describe('Builder', () => {
       const cssFile = fs.readdirSync(OUTPUT_DIR).filter(item => item.match(/\.css$/))[0]
       const cssStyles = fs.readFileSync(path.resolve(OUTPUT_DIR, cssFile), {encoding: 'utf8'})
       expect(cssStyles.indexOf(`${TEST_NAMESPACE}.`)).not.toBe(-1)
+    })
+
+    it('uses namespace in component logic', () => {
+      const jsFile = fs.readdirSync(OUTPUT_DIR).filter(item => item.match(/\.js$/))[0]
+      const code = fs.readFileSync(path.resolve(OUTPUT_DIR, jsFile), {encoding: 'utf8'})
+      expect(code.indexOf(TEST_NAMESPACE)).not.toBe(-1)
     })
   })
 })

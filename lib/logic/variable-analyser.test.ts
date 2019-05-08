@@ -1,62 +1,43 @@
-/**
- * Analyses how Stylable variables are applied
- */
-export class VariableAnalyser {
-  constructor() {
-    // TODO: Not finished
-  }
+import * as path from 'path'
+import {VariableAnalyser} from './variable-analyser'
 
-  public getProjectVariableStructure(): IProjectVariableStructure {
-    // TODO: Not finished
-    return {}
-  }
+const TEST_NAMESPACE = 'NAMESPACE'
 
-  private buildProject() {
-    // TODO: Not finished
-  }
+const EXPECTED_BUTTON_MAIN_TEXT_COLOR_STRUCTURE = [
+  {
+    selector: '.NAMESPACE.s11[data-o3-priority=basic]',
+    declaration: 'color',
+  },
+  {
+    selector: '.NAMESPACE.s11[data-o3-priority=primary]',
+    declaration: 'color',
+  },
+  {
+    selector: '.NAMESPACE.s11[data-o3-priority=secondary]',
+    declaration: 'color',
+  },
+  {
+    selector:
+      '.NAMESPACE.s11[data-o3-priority=secondary]:active,.NAMESPACE.s11[data-o3-priority=secondary]' +
+      ':hover,.NAMESPACE.s11[data-o3-priority=secondary][data-o29-focus]',
+    declaration: 'color',
+  },
+]
 
-  private getMagicValue(componentName: string, variableName: string) {
-    return `--wutc-${componentName}-${variableName}`
-  }
+let variableAnalyser: VariableAnalyser
 
-  private analyseCssFile(filePath: string): IComponentVariableStructure {
-    // TODO: Not finished
-    return {}
-  }
-}
+describe('VariableAnalyser', () => {
+  beforeAll(() => {
+    jest.setTimeout(60000)
+    variableAnalyser = new VariableAnalyser(path.resolve(__dirname, '../../cache/builder'), TEST_NAMESPACE)
+  })
 
-/**
- * Information about how variables of all project components are applied
- */
-export interface IProjectVariableStructure {
-  /**
-   * Information about component variables
-   */
-  [componentName: string]: IComponentVariableStructure
-}
-
-/**
- * Information about how component variables are applied
- */
-export interface IComponentVariableStructure {
-  /**
-   * Information about particular component variable
-   */
-  [variableName: string]: IVariableStructure
-}
-
-/**
- * Information where variable is applied in styles
- */
-export interface IVariableStructure {
-  /**
-   * Full CSS selector used to apply variable value
-   */
-  selector: string
-
-  /**
-   * CSS rule which is used to apply variable value to.
-   * For example - color.
-   */
-  declarationName: string
-}
+  describe('getProjectVariableStructure', () => {
+    it('provides information about where Button component variables are applied in CSS', async () => {
+      const structure = await variableAnalyser.getProjectVariableStructure()
+      expect(structure.Button).toBeDefined()
+      expect(structure.Button.MainTextColor).toBeDefined()
+      expect(structure.Button.MainTextColor).toEqual(EXPECTED_BUTTON_MAIN_TEXT_COLOR_STRUCTURE)
+    })
+  })
+})
