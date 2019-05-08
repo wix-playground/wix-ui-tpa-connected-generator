@@ -28,17 +28,21 @@ export class VariableAnalyser {
 
   /**
    * Constructor
+   * @param projectRoot target project root
    * @param tmpPath path where temporary files can be stored during operation
    * @param namespace namespace to be used for building component styles
    */
-  constructor(tmpPath: string, namespace: string) {
+  constructor(projectRoot: string, tmpPath: string, namespace: string) {
     this.tmpPath = tmpPath
     this.namespace = namespace
-    const analyser = new Analyser(path.resolve(__dirname, '../..'))
+    const analyser = new Analyser(projectRoot)
     this.componentStructure = analyser.getComponentConfig()
     this.builder = new Builder(this.componentStructure, tmpPath)
   }
 
+  /**
+   * Provides information about how variables of components are applied to styles
+   */
   public async getProjectVariableStructure(): Promise<IProjectVariableStructure> {
     await this.buildProject()
 

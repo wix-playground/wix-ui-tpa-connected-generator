@@ -219,6 +219,13 @@ export interface IComponentTemplate {
  * Overridable arguments accepted by templates
  */
 export interface IOverridableTemplateArgs {
-  componentModuleName?: string
+  /**
+   * Base path to compiled consumer component wrappers
+   */
+  consumerBasePath?: string
+
+  /**
+   * Information about how component variables are injected into styles
+   */
   projectVariableStructure?: IProjectVariableStructure
 }
