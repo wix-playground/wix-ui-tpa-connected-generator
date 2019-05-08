@@ -7,6 +7,7 @@ import * as webpack from 'webpack'
 import {IComponentStructure} from '../interfaces/shared'
 import {CSS} from './css'
 import {FileSystem} from './file-system'
+import {IProjectVariableStructure} from './variable-analyser'
 
 /**
  * Name of module where modules reside
@@ -23,11 +24,6 @@ export const COMPONENT_NAME_PLACEHOLDER = '$component'
  * Location of templates
  */
 export const TEMPLATE_PATH = path.resolve(__dirname, '../templates')
-
-/**
- * Path to template for generate component consumers
- */
-export const CONSUMER_TEMPLATE_PATH = path.resolve(TEMPLATE_PATH, 'consumers')
 
 /**
  * Path to consumer webpack configuration template
@@ -62,18 +58,26 @@ export class Builder {
   private componentStructure: IComponentStructure
   private template: IComponentTemplate
   private tmpPath: string
+  private additionalTemplateArgs: IOverridableTemplateArgs
 
   /**
    * Constructor
    * @param componentStructure components and their variables
-   * @param templatePath path where component template is placed
    * @param tmpPath path where to store temporary files during operations
+   * @param additionalTemplateArgs more customization options for component generation
    */
-  constructor(componentStructure: IComponentStructure, tmpPath: string) {
+  constructor(
+    componentStructure: IComponentStructure,
+    tmpPath: string,
+    additionalTemplateArgs: IOverridableTemplateArgs = {},
+    templateName: string = 'consumers',
+  ) {
     this.componentStructure = componentStructure
     this.tmpPath = tmpPath
+    this.additionalTemplateArgs = additionalTemplateArgs
+
     this.prepareTmpPath()
-    this.loadTemplate(CONSUMER_TEMPLATE_PATH)
+    this.loadTemplate(path.resolve(TEMPLATE_PATH, templateName))
   }
 
   /**
@@ -173,6 +177,7 @@ export class Builder {
         variables,
         componentModuleName: COMPONENT_MODULE_NAME,
         namespace,
+        ...this.additionalTemplateArgs,
       })
 
       fs.writeFileSync(path.resolve(targetDirname, fileName), content, {encoding: 'utf8'})
@@ -208,4 +213,12 @@ export interface IComponentTemplate {
    * Content of a template file
    */
   [filePath: string]: string
+}
+
+/**
+ * Overridable arguments accepted by templates
+ */
+export interface IOverridableTemplateArgs {
+  componentModuleName?: string
+  projectVariableStructure?: IProjectVariableStructure
 }
