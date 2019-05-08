@@ -1,5 +1,8 @@
+import * as fs from 'fs'
 import * as path from 'path'
+import * as rimraf from 'rimraf'
 import {Analyser as StructureAnalyser} from 'wix-ui-tpa-analyser'
+import {IComponentStructure} from '../interfaces/shared'
 import {Builder} from './builder'
 import {VariableAnalyser} from './variable-analyser'
 
@@ -17,6 +20,11 @@ export const WRAPPER_COMPONENT_TMP_DIR = 'wrappers'
  * Location where generated consumers would be stored temporarily
  */
 export const CONSUMER_COMPONENT_OUTPUT_DIR = 'generated-consumers'
+
+/**
+ * Placeholder for injecting CSS styles into component JS implementation
+ */
+export const COMPONENT_STYLES_PLACEHOLDER = '{COMPONENT_STYLES}'
 
 /**
  * Generates wrappers for WIX UI TPA components
@@ -50,20 +58,39 @@ export class ComponentWrapper {
    * Builds component wrappers capable of connecting to settings via props
    * @param outputDir location where component wrappers need to be built into
    */
-  public async generate(outputDir: string) {
+  public async build(outputDir: string) {
     const structure = this.structureAnalyser.getComponentConfig()
     const variables = await this.variableAnalyser.getProjectVariableStructure()
 
     const consumerBuilder = new Builder(structure, this.consumerTmpPath)
     consumerBuilder.generate(this.consumerOutputPath, {}, this.uniqueBuildHash)
 
-    const wrapperBuilder = new Builder(structure, this.wrapperTmpPath, {
-      consumerBasePath: this.consumerOutputPath,
-      projectVariableStructure: variables,
-    })
+    const wrapperBuilder = new Builder(
+      structure,
+      this.wrapperTmpPath,
+      {
+        consumerBasePath: path.relative(this.wrapperTmpPath, this.consumerOutputPath),
+        projectVariableStructure: JSON.stringify(variables),
+      },
+      'wrappers',
+    )
 
-    wrapperBuilder.build(outputDir)
+    await wrapperBuilder.build(outputDir)
+    this.bundleCss(outputDir, structure)
   }
 
-  // TODO: inject generated CSS into JS
+  private bundleCss(outputDir: string, componentStructure: IComponentStructure) {
+    Object.keys(componentStructure).forEach(componentName => {
+      const cssFile = path.resolve(outputDir, `${componentName}.bundle.css`)
+      const jsFile = path.resolve(outputDir, `${componentName}.js`)
+
+      const styles = fs.readFileSync(cssFile, {encoding: 'utf8'})
+      const code = fs.readFileSync(jsFile, {encoding: 'utf8'})
+
+      const injectedCode = code.replace(new RegExp(`['"]${COMPONENT_STYLES_PLACEHOLDER}['"]`), JSON.stringify(styles))
+      fs.writeFileSync(jsFile, injectedCode, {encoding: 'utf8'})
+
+      rimraf.sync(cssFile)
+    })
+  }
 }

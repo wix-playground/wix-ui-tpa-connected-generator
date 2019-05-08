@@ -5,9 +5,9 @@ import * as path from 'path'
 import rimraf = require('rimraf')
 import * as webpack from 'webpack'
 import {IComponentStructure} from '../interfaces/shared'
+import {COMPONENT_STYLES_PLACEHOLDER} from './component-wrapper'
 import {CSS} from './css'
 import {FileSystem} from './file-system'
-import {IProjectVariableStructure} from './variable-analyser'
 
 /**
  * Name of module where modules reside
@@ -177,6 +177,7 @@ export class Builder {
         variables,
         componentModuleName: COMPONENT_MODULE_NAME,
         namespace,
+        COMPONENT_STYLES_PLACEHOLDER,
         ...this.additionalTemplateArgs,
       })
 
@@ -225,7 +226,7 @@ export interface IOverridableTemplateArgs {
   consumerBasePath?: string
 
   /**
-   * Information about how component variables are injected into styles
+   * Serialized information about how component variables are injected into styles
    */
-  projectVariableStructure?: IProjectVariableStructure
+  projectVariableStructure?: string
 }

@@ -28,7 +28,7 @@ let variableAnalyser: VariableAnalyser
 
 describe('VariableAnalyser', () => {
   beforeAll(() => {
-    jest.setTimeout(60000)
+    jest.setTimeout(120000)
     variableAnalyser = new VariableAnalyser(
       path.resolve(__dirname, '../..'),
       path.resolve(__dirname, '../../cache/builder'),

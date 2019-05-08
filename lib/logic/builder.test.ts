@@ -28,7 +28,7 @@ let builder: Builder
 
 describe('Builder', () => {
   beforeAll(() => {
-    jest.setTimeout(60000)
+    jest.setTimeout(120000)
     builder = new Builder(MOCK_COMPONENT_STRUCTURE, path.resolve(__dirname, '../../cache/builder'))
   })
 
