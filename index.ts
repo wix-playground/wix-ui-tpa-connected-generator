@@ -1,2 +1,1 @@
-// export * from './lib/analyser'
-console.log('Hello world')
+export * from './lib/logic/launcher'

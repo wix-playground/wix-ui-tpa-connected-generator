@@ -2,7 +2,7 @@ import * as ejs from 'ejs'
 import * as fs from 'fs'
 import * as mkdirp from 'mkdirp'
 import * as path from 'path'
-import rimraf = require('rimraf')
+import * as rimraf from 'rimraf'
 import * as webpack from 'webpack'
 import {IComponentStructure} from '../interfaces/shared'
 import {COMPONENT_STYLES_PLACEHOLDER} from './component-wrapper'
@@ -126,7 +126,14 @@ export class Builder {
   }
 
   private executeWebpack() {
-    const config = require(path.resolve(this.tmpPath, GENERATED_WEBPACK_CONFIG_PATH))
+    let config: webpack.Configuration
+
+    try {
+      // @ts-ignore
+      config = __non_webpack_require__(path.resolve(this.tmpPath, GENERATED_WEBPACK_CONFIG_PATH))
+    } catch (e) {
+      config = require(path.resolve(this.tmpPath, GENERATED_WEBPACK_CONFIG_PATH))
+    }
 
     return new Promise((resolve, reject) => {
       webpack(config, (err, stats) => {
