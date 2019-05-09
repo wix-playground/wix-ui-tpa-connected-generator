@@ -70,7 +70,7 @@ export class ComponentWrapper {
       this.wrapperTmpPath,
       {
         consumerBasePath: path.relative(this.wrapperTmpPath, this.consumerOutputPath),
-        projectVariableStructure: JSON.stringify(variables),
+        projectVariableStructure: variables,
       },
       'wrappers',
     )

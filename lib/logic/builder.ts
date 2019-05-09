@@ -8,6 +8,7 @@ import {IComponentStructure} from '../interfaces/shared'
 import {COMPONENT_STYLES_PLACEHOLDER} from './component-wrapper'
 import {CSS} from './css'
 import {FileSystem} from './file-system'
+import {IProjectVariableStructure} from './variable-analyser'
 
 /**
  * Name of module where modules reside
@@ -58,7 +59,7 @@ export class Builder {
   private componentStructure: IComponentStructure
   private template: IComponentTemplate
   private tmpPath: string
-  private additionalTemplateArgs: IOverridableTemplateArgs
+  private additionalTemplateArgs: IAdditionalTemplateArgs
 
   /**
    * Constructor
@@ -69,7 +70,7 @@ export class Builder {
   constructor(
     componentStructure: IComponentStructure,
     tmpPath: string,
-    additionalTemplateArgs: IOverridableTemplateArgs = {},
+    additionalTemplateArgs: IAdditionalTemplateArgs = {},
     templateName: string = 'consumers',
   ) {
     this.componentStructure = componentStructure
@@ -172,13 +173,21 @@ export class Builder {
       mkdirp.sync(targetDirname)
       const fileName = path.basename(relativeTemplatePath, '.ejs').replace(COMPONENT_NAME_PLACEHOLDER, componentName)
 
+      const projectVariableStructure =
+        this.additionalTemplateArgs.projectVariableStructure &&
+        this.additionalTemplateArgs.projectVariableStructure[componentName]
+          ? JSON.stringify(this.additionalTemplateArgs.projectVariableStructure[componentName])
+          : JSON.stringify({})
+
+      const additionalArgs: IPreparedAdditionalTemplateArgs = {...this.additionalTemplateArgs, projectVariableStructure}
+
       const content = ejs.render(template, {
         componentName,
         variables,
         componentModuleName: COMPONENT_MODULE_NAME,
         namespace,
         COMPONENT_STYLES_PLACEHOLDER,
-        ...this.additionalTemplateArgs,
+        ...additionalArgs,
       })
 
       fs.writeFileSync(path.resolve(targetDirname, fileName), content, {encoding: 'utf8'})
@@ -219,7 +228,23 @@ export interface IComponentTemplate {
 /**
  * Overridable arguments accepted by templates
  */
-export interface IOverridableTemplateArgs {
+export interface IAdditionalTemplateArgs {
+  /**
+   * Base path to compiled consumer component wrappers
+   */
+  consumerBasePath?: string
+
+  /**
+   * Serialized information about how component variables are injected into styles
+   */
+  projectVariableStructure?: IProjectVariableStructure
+}
+
+/**
+ * Overridable arguments accepted by templates
+ * Data is prepared for injection into templates
+ */
+export interface IPreparedAdditionalTemplateArgs {
   /**
    * Base path to compiled consumer component wrappers
    */
