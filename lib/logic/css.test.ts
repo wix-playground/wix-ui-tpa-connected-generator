@@ -1,6 +1,6 @@
 import {CSS} from './css'
 
-const TEST_CSS = '.a .b .c { color: red }'
+const TEST_CSS = '.a .b .c, .x .y .z { color: red }'
 
 describe('CSS', () => {
   describe('wrap', () => {
@@ -12,6 +12,7 @@ describe('CSS', () => {
 
     it('wraps CSS selectors with a given namespace', () => {
       expect(wrappedCss.startsWith('.namespace.a')).toBeTruthy()
+      expect(wrappedCss.indexOf('.namespace.x')).not.toBe(-1)
     })
   })
 
