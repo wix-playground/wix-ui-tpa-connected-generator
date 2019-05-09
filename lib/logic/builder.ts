@@ -8,6 +8,7 @@ import {IComponentStructure} from '../interfaces/shared'
 import {COMPONENT_STYLES_PLACEHOLDER} from './component-wrapper'
 import {CSS} from './css'
 import {FileSystem} from './file-system'
+import {NodeModules} from './node-modules'
 import {IProjectVariableStructure} from './variable-analyser'
 
 /**
@@ -24,7 +25,11 @@ export const COMPONENT_NAME_PLACEHOLDER = '$component'
 /**
  * Location of templates
  */
-export const TEMPLATE_PATH = path.resolve(__dirname, '../templates')
+export const TEMPLATE_PATH =
+  // @ts-ignore
+  typeof __webpack_require__ === 'function'
+    ? path.resolve(new NodeModules(__dirname).find('wix-ui-tpa-connected-generator'), 'dist/templates')
+    : path.resolve(__dirname, '../templates')
 
 /**
  * Path to consumer webpack configuration template
@@ -127,12 +132,14 @@ export class Builder {
 
   private executeWebpack() {
     let config: webpack.Configuration
+    const generatedWebpackConfigPath = path.resolve(this.tmpPath, GENERATED_WEBPACK_CONFIG_PATH)
 
-    try {
+    // @ts-ignore
+    if (typeof __webpack_require__ === 'function') {
       // @ts-ignore
-      config = __non_webpack_require__(path.resolve(this.tmpPath, GENERATED_WEBPACK_CONFIG_PATH))
-    } catch (e) {
-      config = require(path.resolve(this.tmpPath, GENERATED_WEBPACK_CONFIG_PATH))
+      config = __non_webpack_require__(generatedWebpackConfigPath)
+    } else {
+      config = require(generatedWebpackConfigPath)
     }
 
     return new Promise((resolve, reject) => {
