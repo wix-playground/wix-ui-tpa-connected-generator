@@ -29,6 +29,7 @@ module.exports = {
     '!**/cache/**',
     '!**/dist/**',
     '!**/scripts/**',
-    '!**/lib/common/interfaces.ts',
+    '!**/lib/logic/cli.ts',
+    '!**/lib/logic/launcher.ts',
   ],
 }

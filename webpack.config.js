@@ -15,12 +15,15 @@ const exportedConfig = {
       logLevel: 'debug',
     }),
   ],
+  node: {
+    __dirname: true,
+  },
   externals: [nodeExternals()],
   resolve: {
     extensions: ['.webpack.js', '.web.js', '.ts', '.js'],
   },
   output: {
-    path: __dirname + '/dist',
+    path: __dirname + '/dist/logic',
     filename: 'index.js',
     sourceMapFilename: 'index.js.map',
     libraryTarget: 'umd',
