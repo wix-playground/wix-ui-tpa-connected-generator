@@ -65,7 +65,7 @@ export class Cli {
         this.storeArguments(options)
       })
       .example('wutc-generator generate', 'Generates wrapper components.')
-      .example('wutc-generator -r /your/project/path generate', 'Performs generation on a custom path.')
+      .example('wutc-generator -p /your/project/path generate', 'Performs generation on a custom path.')
 
     args.parse(process.argv, {
       name: 'wutc-generator',
@@ -85,15 +85,6 @@ export class Cli {
    */
   protected getArgument(arg: ECliArgument) {
     return this.args[arg]
-  }
-
-  /**
-   * Dynamically overrides value of stored argument
-   * @param arg argument name
-   * @param value argument value
-   */
-  protected setArgument(arg: ECliArgument, value: string) {
-    this.args[arg] = value
   }
 
   /**
