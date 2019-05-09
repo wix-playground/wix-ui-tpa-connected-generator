@@ -7,6 +7,9 @@ import {ComponentWrapper} from './component-wrapper'
  * Launches component wrapper generation based on CLI arguments
  */
 export class Launcher extends Cli {
+  /**
+   * Constructor - launches generation based on CLI
+   */
   constructor() {
     super()
 
