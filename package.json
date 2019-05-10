@@ -7,14 +7,15 @@
     "wutc-generator": "cli.js"
   },
   "scripts": {
-    "prepublishOnly": "npm run lint && npm run test && npm run build && npm run docs",
+    "prepublishOnly": "npm run build",
     "test": "./node_modules/.bin/jest --forceExit --detectOpenHandles",
     "testSync": "./node_modules/.bin/jest --runInBand --forceExit --detectOpenHandles",
     "lint": "./node_modules/.bin/tslint -c ./tslint.json -p ./tsconfig.json -t stylish ./lib/**/*.ts",
-    "build": "./node_modules/.bin/webpack && npm run copyTemplates",
+    "build": "npm run lint && npm run test && npm run docs && ./node_modules/.bin/webpack && npm run copyTemplates",
     "buildDev": "./node_modules/.bin/webpack --config webpack.config.dev.js && npm run copyTemplates",
     "copyTemplates": "rm -rf ./dist/templates && cp -r ./lib/templates ./dist",
     "docs": "./node_modules/.bin/typedoc --module commonjs --target ES6 --exclude \"**/*.test.*\" --ignoreCompilerErrors --out ./dist/docs --readme ./README.md --mode file ./index.ts ./lib",
+    "clean": "rm -rf ./cache || true && rm -rf ./dist || true",
     "exec": "node ./cli.js"
   },
   "repository": {
