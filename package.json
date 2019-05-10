@@ -16,6 +16,7 @@
     "copyTemplates": "rm -rf ./dist/templates && cp -r ./lib/templates ./dist",
     "docs": "./node_modules/.bin/typedoc --module commonjs --target ES6 --exclude \"**/*.test.*\" --ignoreCompilerErrors --out ./dist/docs --readme ./README.md --mode file ./index.ts ./lib",
     "clean": "rm -rf ./cache || true && rm -rf ./dist || true",
+    "clean-install": "rm -rf ./node_modules || true && rm ./package-lock.json || true && npm install",
     "exec": "node ./cli.js"
   },
   "repository": {
