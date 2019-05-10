@@ -124,9 +124,11 @@ export class Builder {
   private wrapGeneratedStyles(namespace: string, outputPath: string) {
     Object.keys(this.componentStructure).forEach(componentName => {
       const cssFile = path.resolve(outputPath, `${componentName}.bundle.css`)
-      const initialStyles = fs.readFileSync(cssFile, {encoding: 'utf8'})
-      const wrappedStyles = CSS.wrap(initialStyles, namespace)
-      fs.writeFileSync(cssFile, wrappedStyles, {encoding: 'utf8'})
+      if (fs.existsSync(cssFile)) {
+        const initialStyles = fs.readFileSync(cssFile, {encoding: 'utf8'})
+        const wrappedStyles = CSS.wrap(initialStyles, namespace)
+        fs.writeFileSync(cssFile, wrappedStyles, {encoding: 'utf8'})
+      }
     })
   }
 
@@ -176,6 +178,18 @@ export class Builder {
     mkdirp.sync(this.tmpPath)
   }
 
+  private componentHasStyle(componentName: string, componentOutputPath: string) {
+    const nodeModules = new NodeModules(componentOutputPath)
+    const componentStylePath = path.resolve(
+      nodeModules.find(COMPONENT_MODULE_NAME),
+      'dist/src/components',
+      componentName,
+      `${componentName}.st.css`,
+    )
+
+    return fs.existsSync(componentStylePath)
+  }
+
   private generateComponent(
     componentName: string,
     componentOutputPath: string,
@@ -183,28 +197,36 @@ export class Builder {
     namespace?: string,
   ) {
     Object.entries(this.template).forEach(([relativeTemplatePath, template]) => {
-      const targetDirname = path.resolve(componentOutputPath, path.dirname(relativeTemplatePath))
-      mkdirp.sync(targetDirname)
-      const fileName = path.basename(relativeTemplatePath, '.ejs').replace(COMPONENT_NAME_PLACEHOLDER, componentName)
+      const hasStyle = this.componentHasStyle(componentName, componentOutputPath)
 
-      const projectVariableStructure =
-        this.additionalTemplateArgs.projectVariableStructure &&
-        this.additionalTemplateArgs.projectVariableStructure[componentName]
-          ? JSON.stringify(this.additionalTemplateArgs.projectVariableStructure[componentName])
-          : JSON.stringify({})
+      if (!relativeTemplatePath.endsWith('.st.css') || hasStyle) {
+        const targetDirname = path.resolve(componentOutputPath, path.dirname(relativeTemplatePath))
+        mkdirp.sync(targetDirname)
+        const fileName = path.basename(relativeTemplatePath, '.ejs').replace(COMPONENT_NAME_PLACEHOLDER, componentName)
 
-      const additionalArgs: IPreparedAdditionalTemplateArgs = {...this.additionalTemplateArgs, projectVariableStructure}
+        const projectVariableStructure =
+          this.additionalTemplateArgs.projectVariableStructure &&
+          this.additionalTemplateArgs.projectVariableStructure[componentName]
+            ? JSON.stringify(this.additionalTemplateArgs.projectVariableStructure[componentName])
+            : JSON.stringify({})
 
-      const content = ejs.render(template, {
-        componentName,
-        variables,
-        componentModuleName: COMPONENT_MODULE_NAME,
-        namespace,
-        COMPONENT_STYLES_PLACEHOLDER,
-        ...additionalArgs,
-      })
+        const additionalArgs: IPreparedAdditionalTemplateArgs = {
+          ...this.additionalTemplateArgs,
+          projectVariableStructure,
+        }
 
-      fs.writeFileSync(path.resolve(targetDirname, fileName), content, {encoding: 'utf8'})
+        const content = ejs.render(template, {
+          componentName,
+          variables,
+          componentModuleName: COMPONENT_MODULE_NAME,
+          namespace,
+          COMPONENT_STYLES_PLACEHOLDER,
+          hasStyle,
+          ...additionalArgs,
+        })
+
+        fs.writeFileSync(path.resolve(targetDirname, fileName), content, {encoding: 'utf8'})
+      }
     })
   }
 }

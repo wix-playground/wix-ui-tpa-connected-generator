@@ -21,6 +21,7 @@ const INJECTED_VARIABLES: IProjectVariableValues = {
 }
 
 const OUTPUT_DIR = path.resolve(__dirname, '../../cache/test')
+const CACHE_DIR = path.resolve(__dirname, '../../cache/builder')
 
 const TEST_NAMESPACE = 'NAMESPACE'
 
@@ -29,7 +30,7 @@ let builder: Builder
 describe('Builder', () => {
   beforeAll(() => {
     jest.setTimeout(120000)
-    builder = new Builder(MOCK_COMPONENT_STRUCTURE, path.resolve(__dirname, '../../cache/builder'))
+    builder = new Builder(MOCK_COMPONENT_STRUCTURE, CACHE_DIR)
   })
 
   describe('generate', () => {
@@ -39,6 +40,7 @@ describe('Builder', () => {
 
     afterAll(() => {
       rimraf.sync(OUTPUT_DIR)
+      rimraf.sync(CACHE_DIR)
     })
 
     it('generates sources for each component', () => {

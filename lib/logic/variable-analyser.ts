@@ -93,6 +93,10 @@ export class VariableAnalyser {
   }
 
   private analyseCssFile(filePath: string): IComponentVariableStructure {
+    if (!fs.existsSync(filePath)) {
+      return {} as IComponentVariableStructure
+    }
+
     const styles = fs.readFileSync(filePath, {encoding: 'utf8'})
     const selectorInfo = CSS.getMagicValueSelectors(styles, this.getMagicValueStart())
 

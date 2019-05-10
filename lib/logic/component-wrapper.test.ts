@@ -4,6 +4,7 @@ import * as rimraf from 'rimraf'
 import {ComponentWrapper} from './component-wrapper'
 
 const OUTPUT_DIR = path.resolve(__dirname, '../../cache/e2e')
+const CACHE_DIR = path.resolve(__dirname, '../../cache/wrapper')
 
 const EXPECTED_COMPONENTS = [
   'Autocomplete',
@@ -21,18 +22,13 @@ describe('ComponentWrapper', () => {
   describe('generate', () => {
     beforeAll(done => {
       jest.setTimeout(120000)
-
-      const componentWrapper = new ComponentWrapper(
-        path.resolve(__dirname, '../..'),
-        path.resolve(__dirname, '../../cache/wrapper'),
-        'HASH',
-      )
-
+      const componentWrapper = new ComponentWrapper(path.resolve(__dirname, '../..'), CACHE_DIR, 'HASH')
       componentWrapper.build(OUTPUT_DIR).then(done, done)
     })
 
     afterAll(() => {
       rimraf.sync(OUTPUT_DIR)
+      rimraf.sync(CACHE_DIR)
     })
 
     it('generates wrappers for all components', async () => {

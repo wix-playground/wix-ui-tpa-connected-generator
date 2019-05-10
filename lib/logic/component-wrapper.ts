@@ -84,7 +84,7 @@ export class ComponentWrapper {
       const cssFile = path.resolve(outputDir, `${componentName}.bundle.css`)
       const jsFile = path.resolve(outputDir, `${componentName}.js`)
 
-      const styles = fs.readFileSync(cssFile, {encoding: 'utf8'})
+      const styles = fs.existsSync(cssFile) ? fs.readFileSync(cssFile, {encoding: 'utf8'}) : ''
       const code = fs.readFileSync(jsFile, {encoding: 'utf8'})
 
       const injectedCode = code.replace(new RegExp(`['"]${COMPONENT_STYLES_PLACEHOLDER}['"]`), JSON.stringify(styles))

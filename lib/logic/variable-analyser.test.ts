@@ -1,7 +1,10 @@
 import * as path from 'path'
+import * as rimraf from 'rimraf'
 import {VariableAnalyser} from './variable-analyser'
 
 const TEST_NAMESPACE = 'NAMESPACE'
+
+const CACHE_DIR = path.resolve(__dirname, '../../cache/builder')
 
 const EXPECTED_BUTTON_MAIN_TEXT_COLOR_STRUCTURE = [
   {
@@ -29,11 +32,11 @@ let variableAnalyser: VariableAnalyser
 describe('VariableAnalyser', () => {
   beforeAll(() => {
     jest.setTimeout(120000)
-    variableAnalyser = new VariableAnalyser(
-      path.resolve(__dirname, '../..'),
-      path.resolve(__dirname, '../../cache/builder'),
-      TEST_NAMESPACE,
-    )
+    variableAnalyser = new VariableAnalyser(path.resolve(__dirname, '../..'), CACHE_DIR, TEST_NAMESPACE)
+  })
+
+  afterAll(() => {
+    rimraf.sync(CACHE_DIR)
   })
 
   describe('getProjectVariableStructure', () => {
