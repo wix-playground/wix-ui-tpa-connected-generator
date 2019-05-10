@@ -46,6 +46,12 @@ More detailed documentation is available under _./dist/docs_.
 
 ## Next Steps for Contributors
 
+### Publish and Dependencies
+
+This module is not published to NPM at the moment which means that in order for it to run it has to have a linked version of "wix-ui-tpa-analyser" available.
+
+When module is published, it needs to have "wix-ui-tpa-analyser" specified under dependencies.
+
 ### Progress Logging
 
 Currently there is no output into console which would reflect progress of component generation.
