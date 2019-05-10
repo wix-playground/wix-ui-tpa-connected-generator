@@ -40,7 +40,7 @@ describe('ComponentWrapper', () => {
     it('injects CSS directly into JS of components', () => {
       const testComponentPath = path.resolve(OUTPUT_DIR, 'Button.js')
       const code = fs.readFileSync(testComponentPath)
-      expect(code.indexOf('.s11{min-width:100px;border-style:solid')).not.toBe(-1)
+      expect(code.toString().match(/\.s[0-9]+{min-width:100px;border-style:solid/)).toBeTruthy()
     })
   })
 })

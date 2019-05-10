@@ -44,7 +44,12 @@ describe('VariableAnalyser', () => {
       const structure = await variableAnalyser.getProjectVariableStructure()
       expect(structure.Button).toBeDefined()
       expect(structure.Button.MainTextColor).toBeDefined()
-      expect(structure.Button.MainTextColor).toEqual(EXPECTED_BUTTON_MAIN_TEXT_COLOR_STRUCTURE)
+      expect(normalizeSelectors(structure.Button.MainTextColor)).toEqual(
+        normalizeSelectors(EXPECTED_BUTTON_MAIN_TEXT_COLOR_STRUCTURE),
+      )
     })
   })
 })
+
+const normalizeSelectors = (data: any) =>
+  data.map((item: any) => ({...item, selector: item.selector.replace(/[0-9]+/g, '')}))
