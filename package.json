@@ -71,5 +71,6 @@
     "typedoc": "^0.14.2",
     "typescript": "^3.4.1",
     "wix-ui-tpa": "1.0.131"
-  }
+  },
+  "publishConfig": {}
 }
