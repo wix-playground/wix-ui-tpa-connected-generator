@@ -4,6 +4,8 @@ import * as rimraf from 'rimraf'
 import {IComponentStructure} from '../interfaces/shared'
 import {Builder, IProjectVariableValues} from './builder'
 
+jest.setTimeout(15000)
+
 const MOCK_COMPONENT_STRUCTURE: IComponentStructure = {
   Button: ['MainBorderColor', 'MainBorderWidth'],
   Text: ['MainTextColor', 'MainTextFont'],
@@ -29,7 +31,6 @@ let builder: Builder
 
 describe('Builder', () => {
   beforeAll(() => {
-    jest.setTimeout(120000)
     builder = new Builder(MOCK_COMPONENT_STRUCTURE, CACHE_DIR)
   })
 

@@ -1,6 +1,7 @@
 const nodeModules = require('./scripts/nodeModules.js')
 
 module.exports = {
+  testRunner: 'jest-circus/runner',
   transform: {
     '.(ts)$': 'ts-jest',
   },

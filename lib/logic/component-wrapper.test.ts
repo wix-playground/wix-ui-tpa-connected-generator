@@ -3,6 +3,8 @@ import * as path from 'path'
 import * as rimraf from 'rimraf'
 import {ComponentWrapper} from './component-wrapper'
 
+jest.setTimeout(15000)
+
 const OUTPUT_DIR = path.resolve(__dirname, '../../cache/e2e')
 const CACHE_DIR = path.resolve(__dirname, '../../cache/wrapper')
 
@@ -21,7 +23,6 @@ const EXPECTED_COMPONENTS = [
 describe('ComponentWrapper', () => {
   describe('generate', () => {
     beforeAll(done => {
-      jest.setTimeout(120000)
       const componentWrapper = new ComponentWrapper(path.resolve(__dirname, '../..'), CACHE_DIR, 'HASH')
       componentWrapper.build(OUTPUT_DIR).then(done, done)
     })

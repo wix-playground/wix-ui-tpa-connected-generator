@@ -2,27 +2,29 @@ import * as path from 'path'
 import * as rimraf from 'rimraf'
 import {VariableAnalyser} from './variable-analyser'
 
+jest.setTimeout(15000)
+
 const TEST_NAMESPACE = 'NAMESPACE'
 
 const CACHE_DIR = path.resolve(__dirname, '../../cache/builder')
 
 const EXPECTED_BUTTON_MAIN_TEXT_COLOR_STRUCTURE = [
   {
-    selector: '.NAMESPACE.s11[data-o3-priority=basic]',
+    selector: '.NAMESPACE.s[data-button-priority=basic]',
     declaration: 'color',
   },
   {
-    selector: '.NAMESPACE.s11[data-o3-priority=primary]',
+    selector: '.NAMESPACE.s[data-button-priority=primary]',
     declaration: 'color',
   },
   {
-    selector: '.NAMESPACE.s11[data-o3-priority=secondary]',
+    selector: '.NAMESPACE.s[data-button-priority=secondary]',
     declaration: 'color',
   },
   {
     selector:
-      '.NAMESPACE.s11[data-o3-priority=secondary]:active,.NAMESPACE.s11[data-o3-priority=secondary]' +
-      ':hover,.NAMESPACE.s11[data-o3-priority=secondary][data-o29-focus]',
+      '.NAMESPACE.s[data-button-priority=secondary]:active,.NAMESPACE.s[data-button-priority=secondary]' +
+      ':hover,.NAMESPACE.s[data-button-priority=secondary][data-focusable-focus]',
     declaration: 'color',
   },
 ]
@@ -31,7 +33,6 @@ let variableAnalyser: VariableAnalyser
 
 describe('VariableAnalyser', () => {
   beforeAll(() => {
-    jest.setTimeout(120000)
     variableAnalyser = new VariableAnalyser(path.resolve(__dirname, '../..'), CACHE_DIR, TEST_NAMESPACE)
   })
 
