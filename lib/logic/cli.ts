@@ -50,7 +50,7 @@ export class Cli {
    */
   private args: IGeneratorArgs = {
     targetPath: path.resolve(process.cwd()),
-    tmp: path.resolve(process.cwd(), 'cache/generator'),
+    tmp: path.resolve(process.cwd(), 'cache/tpacg'),
   }
 
   /**

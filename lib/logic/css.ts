@@ -50,6 +50,7 @@ export class CSS {
 
     let mediaQueryList: cssTree.CssNode = null
     let selectorList: cssTree.CssNode = null
+    let rawSelector: string = null
     let declaration: string = null
 
     cssTree.walk(ast, {
@@ -58,10 +59,14 @@ export class CSS {
           mediaQueryList = node
         } else if (node.type === 'SelectorList') {
           selectorList = node
+          rawSelector = null
+        } else if (node.type === 'Raw') {
+          rawSelector = node.value
+          selectorList = null
         } else if (node.type === 'Declaration') {
           declaration = node.property
         } else if (node.type === 'String' && node.value.includes(magicValueStart)) {
-          const selector = cssTree.generate(selectorList)
+          const selector = selectorList ? cssTree.generate(selectorList) : rawSelector
           const mediaQuery = mediaQueryList ? cssTree.generate(mediaQueryList) : null
           const magicValue = this.extractMagicValue(node.value, magicValueStart)
 
@@ -80,6 +85,7 @@ export class CSS {
           mediaQueryList = null
         } else if (node.type === 'Rule') {
           selectorList = null
+          rawSelector = null
         } else if (node.type === 'Declaration') {
           declaration = null
         }

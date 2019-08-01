@@ -37,6 +37,7 @@ wutc-generator -p /custom/path generate
 - webpack
 - webpack-cli
 - wix-ui-tpa
+- svg-inline-loader
 
 Intended target during development of this module was root directory of _wix-ui-tpa-connected_ module.
 
