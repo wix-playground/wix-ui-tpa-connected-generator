@@ -21,6 +21,6 @@ export class Launcher extends Cli {
   }
 
   private getBuildHash() {
-    return uniqId()
+    return `u${uniqId()}`
   }
 }
