@@ -76,21 +76,5 @@ export class ComponentWrapper {
     )
 
     await wrapperBuilder.build(outputDir)
-    this.bundleCss(outputDir, structure)
-  }
-
-  private bundleCss(outputDir: string, componentStructure: IComponentStructure) {
-    Object.keys(componentStructure).forEach(componentName => {
-      const cssFile = path.resolve(outputDir, `${componentName}.bundle.css`)
-      const jsFile = path.resolve(outputDir, `${componentName}.js`)
-
-      const styles = fs.existsSync(cssFile) ? fs.readFileSync(cssFile, {encoding: 'utf8'}) : ''
-      const code = fs.readFileSync(jsFile, {encoding: 'utf8'})
-
-      const injectedCode = code.replace(new RegExp(`['"]${COMPONENT_STYLES_PLACEHOLDER}['"]`), JSON.stringify(styles))
-      fs.writeFileSync(jsFile, injectedCode, {encoding: 'utf8'})
-
-      rimraf.sync(cssFile)
-    })
   }
 }
