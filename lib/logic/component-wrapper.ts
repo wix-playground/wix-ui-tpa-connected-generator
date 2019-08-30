@@ -76,5 +76,8 @@ export class ComponentWrapper {
     )
 
     await wrapperBuilder.build(outputDir)
+
+    const structureFilePath = path.resolve(outputDir, 'structure.json')
+    fs.writeFileSync(structureFilePath, JSON.stringify(variables, null, 2))
   }
 }
