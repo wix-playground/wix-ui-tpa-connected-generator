@@ -1,6 +1,6 @@
 {
   "name": "wix-ui-tpa-connected-generator",
-  "version": "1.1.6",
+  "version": "2.0.0",
   "description": "Generates wrapper components for wix-ui-tpa-connected",
   "main": "dist/index.js",
   "bin": {
@@ -18,8 +18,7 @@
     "copyTemplates": "rm -rf ./dist/templates && cp -r ./lib/templates ./dist",
     "docs": "./node_modules/.bin/typedoc --module commonjs --target ES6 --exclude \"**/*.test.*\" --ignoreCompilerErrors --out ./dist/docs --readme ./README.md --mode file ./index.ts ./lib",
     "clean": "rm -rf ./cache || true && rm -rf ./dist || true && rm ./index.d.ts || true",
-    "clean-install": "rm -rf ./node_modules || true && rm ./package-lock.json || true && npm install",
-    "exec": "node ./cli.js"
+    "clean-install": "rm -rf ./node_modules || true && rm ./package-lock.json || true && npm install"
   },
   "repository": {
     "type": "git",
