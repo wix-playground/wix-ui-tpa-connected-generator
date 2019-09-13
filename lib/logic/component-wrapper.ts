@@ -1,10 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import * as rimraf from 'rimraf'
 import {Analyser as StructureAnalyser} from 'wix-ui-tpa-analyser'
-import {IComponentStructure} from '../interfaces/shared'
 import {Builder} from './builder'
-import {VariableAnalyser} from './variable-analyser'
+import {IProjectVariableStructure, VariableAnalyser} from './variable-analyser'
 
 /**
  * Location for temporary files when generating consumer wrappers
@@ -76,7 +74,10 @@ export class ComponentWrapper {
     )
 
     await wrapperBuilder.build(outputDir)
+    this.generateStructureDefinition(variables, outputDir)
+  }
 
+  private generateStructureDefinition(variables: IProjectVariableStructure, outputDir: string) {
     const structureFilePath = path.resolve(outputDir, 'structure.json')
     fs.writeFileSync(structureFilePath, JSON.stringify(variables, null, 2))
   }
