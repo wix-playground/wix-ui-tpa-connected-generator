@@ -74,6 +74,7 @@ export class ComponentWrapper {
     )
 
     await wrapperBuilder.build(outputDir)
+
     this.generateStructureDefinition(variables, outputDir)
   }
 
