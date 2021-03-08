@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import {Analyser as StructureAnalyser} from 'wix-ui-tpa-analyser'
+import {Analyser as StructureAnalyser} from '@wix/wix-ui-tpa-analyser'
 import {Builder} from './builder'
 import {IProjectVariableStructure, VariableAnalyser} from './variable-analyser'
 

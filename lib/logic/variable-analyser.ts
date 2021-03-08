@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as rimraf from 'rimraf'
-import {Analyser} from 'wix-ui-tpa-analyser'
+import {Analyser} from '@wix/wix-ui-tpa-analyser'
 import {IComponentStructure} from '../interfaces/shared'
 import {Builder, IProjectVariableValues} from './builder'
 import {CSS} from './css'
