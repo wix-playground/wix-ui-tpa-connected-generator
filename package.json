@@ -1,5 +1,5 @@
 {
-  "name": "wix-ui-tpa-connected-generator",
+  "name": "@wix/wix-ui-tpa-connected-generator",
   "version": "2.0.1",
   "description": "Generates wrapper components for wix-ui-tpa-connected",
   "main": "dist/index.js",
